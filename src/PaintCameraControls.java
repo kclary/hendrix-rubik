@@ -3,7 +3,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class PaintCameraControls extends JPanel implements ActionListener{
@@ -14,7 +13,6 @@ public class PaintCameraControls extends JPanel implements ActionListener{
         private BasicArrowButton west = new BasicArrowButton(BasicArrowButton.WEST);
         private JButton zoomIn = new JButton("+");
         private JButton zoomOut = new JButton("-");
-    	private JButton rearview = new JButton("Rear");
 
         private RubikPane pane;
        
