@@ -29,17 +29,13 @@ public class Cube {
 		world = new World();
 		camera = world.getCamera();
 		rearCamera = world.getCamera();
-//		initialPosition = camera.getPosition();
 
-		String path = "/export/home/s11/claryka/Images/";
-
-		TextureManager.getInstance().addTexture("red", new Texture(path + "red.png"));
-		TextureManager.getInstance().addTexture("blue", new Texture(path + "blue.png"));
-		TextureManager.getInstance().addTexture("white", new Texture(path + "white.png"));
-		TextureManager.getInstance().addTexture("pink", new Texture(path + "orange.png"));
-		TextureManager.getInstance().addTexture("green", new Texture(path + "green.png"));
-		TextureManager.getInstance().addTexture("yellow", new Texture(path + "yellow.png"));
-		TextureManager.getInstance().addTexture("dog", new Texture(path + "a.aaa-dog-carrot.jpg"));
+		TextureManager.getInstance().addTexture("red", new Texture("red.png"));
+		TextureManager.getInstance().addTexture("blue", new Texture("blue.png"));
+		TextureManager.getInstance().addTexture("white", new Texture("white.png"));
+		TextureManager.getInstance().addTexture("pink", new Texture("orange.png"));
+		TextureManager.getInstance().addTexture("green", new Texture("green.png"));
+		TextureManager.getInstance().addTexture("yellow", new Texture("yellow.png"));
 		TextureManager.getInstance().addTexture("black", new Texture(2, 2, java.awt.Color.BLACK));
 		
 		//frame
