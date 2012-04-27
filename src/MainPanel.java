@@ -1,6 +1,7 @@
 
 
 import java.awt.Graphics;
+import java.util.Stack;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -43,7 +44,30 @@ public class MainPanel extends JPanel {
 		pane.repaint();
 	}
 	
-	public JTextArea getInstructions() { 
-		return instructPanel.getInstructBox();
+	public String[] getHistory() { 
+		return buttonPanel.getHistory();
+	}
+	
+	public void load(Stack<String> history) { 
+		String s;
+		int d;
+
+		//pane = new RubikPane();
+	//	reversePane = new RearPane(pane);
+		for(int i = 0; i < history.size(); i++) { 
+			s = history.get(i);
+			String[] instruct = s.split(" ");
+			if(instruct[3].equals("Right")) { 
+				d = 1;
+			} else { 
+				d = -1;
+			}
+			if(instruct[1].equals("row")) {
+				buttonPanel.rotateRow(new Integer(instruct[2]), d);
+			}
+			else if(instruct[1].equals("col")) { 
+				buttonPanel.rotateCol(new Integer(instruct[2]), d);
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 import com.threed.jpct.Camera;
 import com.threed.jpct.SimpleVector;
@@ -94,6 +95,12 @@ public class Cube {
 		world.getCamera().setPosition(70, -70, -65);
 		world.getCamera().lookAt(boxes[0].getTransformedCenter());
 		init = world.getCamera().getPosition();
+	}
+	
+	public Cube(Stack<String> st) { 
+		this();
+		
+		
 	}
 	
 	private void add(SingleCube c) { 
@@ -210,7 +217,6 @@ public class Cube {
         		init = newDistance;
         	}
         }
-        	System.out.println(newDistance);
 	}
 	
 	public void rotateCamera(int direction){

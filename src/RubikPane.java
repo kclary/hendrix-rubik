@@ -30,7 +30,7 @@ public class RubikPane extends JPanel implements MouseListener, MouseMotionListe
 	private SimpleVector init;
 	private int idx;
 
-	public RubikPane() throws Exception {
+	public RubikPane() {
 		super();
 		
 		size = new Dimension(800, 600);
@@ -95,7 +95,6 @@ public class RubikPane extends JPanel implements MouseListener, MouseMotionListe
 		} else { 
 			zoomCamera(1);
 		}
-		System.out.println("event");
 	}
 	
 	@SuppressWarnings("static-access")
@@ -110,7 +109,6 @@ public class RubikPane extends JPanel implements MouseListener, MouseMotionListe
                         return picked.getID();             
                 }
         }
-        
         return -100;
 	}
 	

@@ -1,6 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Scanner;
+import java.util.Stack;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -28,8 +30,7 @@ public class Menu implements ActionListener {
 	public void actionPerformed(ActionEvent evt){
 		
 		if(evt.getSource() == save){
-			String st = main.getInstructions().getText();
-			String[] s = st.split("/n");
+			String[] s = main.getHistory();
 			
 			JFileChooser chooser = new JFileChooser();
 			int choice = chooser.showSaveDialog(null);
@@ -53,6 +54,19 @@ public class Menu implements ActionListener {
 		} catch (IOException e) { saveSuccessful = false; }
 		
 		return saveSuccessful;
+	}
+	
+	private Stack<String> load(File f) {
+		Stack<String> history = new Stack<String>();
+		boolean loadSuccessful = true;
+		try { 
+			Scanner s = new Scanner(f);
+			while(s.hasNext()) { 
+				history.push(s.next());
+			}
+			
+		} catch(IOException e) { loadSuccessful = false; } 
+		return history;
 	}
 	
 	

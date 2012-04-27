@@ -4,17 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.util.Random;
+import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.plaf.basic.BasicArrowButton;
-
-import com.threed.jpct.Interact2D;
-import com.threed.jpct.Object3D;
-import com.threed.jpct.SimpleVector;
 
 public class PaintButtons extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
@@ -34,6 +30,8 @@ public class PaintButtons extends JPanel implements ActionListener{
 	private JButton scramble = new JButton("Scramble");
 	private PaintInstruct temp;
 	RubikPane rubPane;
+	private Stack<String> history = new Stack<String>();
+	private boolean isHint = false;
 	
 	/*public void mouseClicked(MouseEvent e) {
 	        System.out.println("In the mouse checked");
@@ -133,70 +131,147 @@ public class PaintButtons extends JPanel implements ActionListener{
 		}else if(evt.getSource() == row3R){
 			rotateRow(3, -1);
 		}else if(evt.getSource() == col1U){
-			twistCol(1, 1);
+			rotateCol(1, 1);
 		} else if(evt.getSource() == col2U){
-			twistCol(2, 1);
+			rotateCol(2, 1);
 		}else if(evt.getSource() == col3U){
-			twistCol(3, 1);
+			rotateCol(3, 1);
 		}else if(evt.getSource() == col1D){
-			twistCol(1, -1);
+			rotateCol(1, -1);
 		}else if(evt.getSource() == col2D){
-			twistCol(2, -1);
+			rotateCol(2, -1);
 		}else if(evt.getSource() == col3D){
-			twistCol(3, -1);			
+			rotateCol(3, -1);			
 		}else if(evt.getSource() == scramble){
-			randomizeBlock(30);
+			scrambleBlock(20);
 		}
 		else{
 			JTextArea instruct = temp.getInstructBox();
-			instruct.append("I don't know yet\n");
+			if(history.empty()==true){
+				instruct.append("Already solved!\n");
+			}else{
+				instruct.append("Hint: " + history.peek()+"\n");
+			}
 		}
 	}
-	//camera rotations need to update "instruction box"
+	
+	public String[] getHistory() { 
+		String[] s = new String[history.size()];
+		for(int i = 0; i < s.length; i++) {
+			s[i] = history.get(i);
+		}
+		return s;
+	}
 	
 	public void rotateRow(int row, int dir) {
-		JTextArea instruct = temp.getInstructBox();		
+		JTextArea instruct = temp.getInstructBox();	
+		String instruction = "Twist row " + new Integer(row).toString();
 		if(dir == 1) {
-			rotateLeft(instruct, "Twist Row " + new Integer(row).toString() +  " Left\n", row, dir);
+			rotateLeft(instruct, instruction + " Left\n", row, dir);
+			if(history.peek().equals(instruction + " Left")) {
+				history.pop();
+			}
+			else { 
+				history.push(instruction + " Right");
+			}
 		} else {
-			rotateLeft(instruct, "Twist Row " + new Integer(row).toString() +  " Right\n", row, dir);
+			rotateLeft(instruct, instruction +  " Right\n", row, dir);
+			if(history.peek().equals(instruction + " Right")) {
+				history.pop();
+			}
+			else { 
+				history.push(instruction + " Left");
+			}
 		}
 	}
 	
-	public void twistCol(int col, int dir) {
+	public void rotateCol(int col, int dir) {
 		JTextArea instruct = temp.getInstructBox();
+		String instruction = "Twist col " + new Integer(col).toString();
 		if(dir == 1) {
-			rotateUp(instruct, "Twist Col " + new Integer(col).toString() + " Up\n", col, 1);
+			rotateUp(instruct, instruction + " Up\n", col, 1);
+			if(history.peek().equals(instruction + " Up")){
+				history.pop();
+			}
+			else { 
+				history.push(instruction + " Down");
+			}
 		} else {
-			rotateUp(instruct, "Twist Col " + new Integer(col).toString() + " Down\n", col, -1);
+			rotateUp(instruct, instruction + " Down\n", col, -1);
+			if(history.peek().equals(instruction + " Down")) { 
+				history.pop();
+			}
+			else { 
+				history.push(instruction + " Up");
+			}
 		}
 	}
 	public void rotateUp(JTextArea instruct, String s, int col, int d) { 
 		instruct.append(s);
-	//	rubPane.rotateUp(col, d);
 		rubPane.addUpdate(col, d, Direction.Z);
 		rubPane.repaint();
 	}
 	
 	public void rotateLeft(JTextArea instruct, String s, int row, int d) { 
 		instruct.append(s);
-	//	rubPane.rotateLeft(row, d);
 		rubPane.addUpdate(row, d, Direction.Y);
 		rubPane.repaint();
 	}
 	
-	public void randomizeBlock(int numberOfMoves) {
+	public void scrambleBlock(int numberOfMoves) {
 		for (int i = 0; i < numberOfMoves; i++) {
 			Random randomGenerator = new Random();
 			Float rand = randomGenerator.nextFloat();
 			Float randRow = randomGenerator.nextFloat();
 			int rowToChange = (int) Math.floor(randRow * 3);
 			if(rand > .5f) {
-				twistCol(rowToChange + 1, 1);
+				rand = randomGenerator.nextFloat();
+				if(rand > .5f) { 
+					scrambleCol(rowToChange + 1, -1);
+				}
+				else { 
+					scrambleCol(rowToChange + 1, 1);
+				}
 			} else {
-				rotateRow(rowToChange + 1, 1);
+				rand = randomGenerator.nextFloat();
+				if(rand > .5f) { 
+					scrambleRow(rowToChange + 1, -1);
+				}
+				else { 
+					scrambleRow(rowToChange + 1, 1);
+				}
 			}
 		}
+	}
+	
+	public void scrambleCol(int col, int dir){
+		if(dir == 1) {
+			scrambleUp(col, 1);
+			history.push("Twist col "+new Integer(col).toString()+" Down");
+		} else {
+			scrambleUp(col, -1);
+			history.push("Twist col "+new Integer(col).toString()+" Up");
+		}
+	}
+	
+	public void scrambleUp(int col, int d){
+		rubPane.addUpdate(col, d, Direction.Z);
+		rubPane.repaint();
+	}
+	
+	public void scrambleRow(int row, int dir){	
+		if(dir == 1) {
+			scrambleLeft(row, dir);
+			history.push("Twist row "+new Integer(row).toString()+ " Right");
+		} else {
+			scrambleLeft(row, dir);
+			history.push("Twist row "+new Integer(row).toString()+" Left");
+		}
+	}
+	
+	public void scrambleLeft(int row, int d){
+			rubPane.addUpdate(row, d, Direction.Y);
+			rubPane.repaint();
 	}
 
 }
