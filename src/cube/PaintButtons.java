@@ -151,14 +151,14 @@ public class PaintButtons extends JPanel implements ActionListener{
 			scrambleBlock(20);
 		}else if(evt.getSource() == solve1) { 
 			solve();
-			instructions.getInstructBox().setText("Solved!");
+			instructions.getInstructBox().setText("Solved!\n");
 		}else if(evt.getSource() == solve2) { 
 			TypeOfCube cubeState = cubeRecognizer.getCubeState(currentState);
 			FaceColorsSearcher searcher = new FaceColorsSearcher(this, currentState);
 			searcher.setCubeType(cubeState);
 			searcher.setSolveCubeAutomatically();
 			searcher.run();
-			instructions.getInstructBox().setText("Solved!");
+			instructions.getInstructBox().setText("Solved!\n");
 		}
 		else{
 			JTextArea instruct = instructions.getInstructBox();
@@ -325,9 +325,23 @@ public class PaintButtons extends JPanel implements ActionListener{
 				d = -1;
 			}
 			if(instruct[1].equals("row")) {
+				if(d > 0) { 
+					currentState = changer.rowLeftNewState(currentState, new Integer(instruct[2])-1);
+					currentState.setAsUserGenerated();
+				} else { 
+					currentState = changer.rowRightNewState(currentState, new Integer(instruct[2])-1);
+					currentState.setAsUserGenerated();
+				}
 				rubPane.addUpdate(new Integer(instruct[2]), d, Direction.Y);
 			}
 			else if(instruct[1].equals("col")) { 
+				if(d > 0) { 
+					currentState = changer.colUpNewState(currentState, new Integer(instruct[2])-1);
+					currentState.setAsUserGenerated();
+				} else { 
+					currentState = changer.colDownNewState(currentState, new Integer(instruct[2])-1);
+					currentState.setAsUserGenerated();
+				}
 				rubPane.addUpdate(new Integer(instruct[2]), d, Direction.Z);
 			}
 		}
@@ -346,6 +360,14 @@ public class PaintButtons extends JPanel implements ActionListener{
 	
 	public void scrambleUp(int col, int d){
 		rubPane.addUpdate(col, d, Direction.Z);
+		if(d > 0 ) { 
+			currentState = changer.colUpNewState(currentState, col-1);
+			currentState.setAsUserGenerated();
+		}
+		else { 
+			currentState = changer.colDownNewState(currentState, col-1);
+			currentState.setAsUserGenerated();
+		}
 		rubPane.repaint();
 	}
 	
@@ -361,6 +383,14 @@ public class PaintButtons extends JPanel implements ActionListener{
 	
 	public void scrambleLeft(int row, int d){
 			rubPane.addUpdate(row, d, Direction.Y);
+			if(d > 0) { 
+				currentState = changer.rowLeftNewState(currentState, row-1);
+				currentState.setAsUserGenerated();
+			}
+			else { 
+				currentState = changer.rowRightNewState(currentState, row-1);
+				currentState.setAsUserGenerated();
+			}
 			rubPane.repaint();
 	}
 	
