@@ -13,13 +13,12 @@ public class Cube {
 	final static float ROTATION = (float)(Math.PI/2)/13;
 	
 	private World world;
-	SingleCube[] boxes;
-	int index;
-	ArrayList<Rotation> rotations;
+	private SingleCube[] boxes;
+	private int index;
+	private ArrayList<Rotation> rotations;
 	private Camera camera;
 	private Camera rearCamera;
-//	private SimpleVector initialPosition;
-//	private SimpleVector newPosition;
+	private SimpleVector init;
 	
 	public Cube() { 
 		index = 0;
@@ -94,6 +93,7 @@ public class Cube {
 		world.setAmbientLight(255, 255, 255);
 		world.getCamera().setPosition(70, -70, -65);
 		world.getCamera().lookAt(boxes[0].getTransformedCenter());
+		init = world.getCamera().getPosition();
 	}
 	
 	private void add(SingleCube c) { 
@@ -111,8 +111,12 @@ public class Cube {
 	}
 	
 	public void setCamera() { 
-		world.getCamera().setPosition(70, -70, -65);
+		world.getCamera().setPosition(init);
 		world.getCamera().lookAt(boxes[0].getTransformedCenter());
+	}
+	
+	public SimpleVector getCamPos() { 
+		return init;
 	}
 	
 	public void rotateUp(int col, int d) { 
@@ -200,12 +204,17 @@ public class Cube {
 	public void zoomCamera(int parity){
         SimpleVector newDistance = camera.getPosition();
         newDistance.scalarMul(1 - parity*0.1f);
-        camera.setPosition(newDistance);
+        if(newDistance.x > 15 && newDistance.y < -15 && newDistance.z < -15) { 
+        	if(newDistance.x < 540 && newDistance.y > -540 && newDistance.z > -500) {
+        		camera.setPosition(newDistance);
+        		init = newDistance;
+        	}
+        }
+        	System.out.println(newDistance);
 	}
 	
 	public void rotateCamera(int direction){
 	        camera.rotateAxis(new SimpleVector(0,5,0), direction*25);
-	        //camera.lookAt(new SimpleVector(0, 0, 0));
 	}
 	
 	public SingleCube[] getBoxes() { 

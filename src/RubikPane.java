@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -15,7 +17,7 @@ import com.threed.jpct.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class RubikPane extends JPanel implements MouseListener, MouseMotionListener {
+public class RubikPane extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	private FrameBuffer buffer;
 	private BlockingQueue<Update> queue;
@@ -42,6 +44,7 @@ public class RubikPane extends JPanel implements MouseListener, MouseMotionListe
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addMouseWheelListener(this);
 	}
 	
 	public void mouseClicked(MouseEvent e) { }
@@ -70,11 +73,12 @@ public class RubikPane extends JPanel implements MouseListener, MouseMotionListe
 		    
 	        Camera c = world.getCamera();
 	        
-	        c.moveCamera(Camera.CAMERA_MOVEIN, 120);
+	        float d = cube.getCamPos().distance(new SimpleVector(0,0,0));
+	        c.moveCamera(Camera.CAMERA_MOVEIN, d);
 	        c.rotateX(v.y*5);
 	        c.rotateY(v.x*5);
 	        c.rotateZ(v.y*5);
-	        c.moveCamera(Camera.CAMERA_MOVEOUT, 120);
+	        c.moveCamera(Camera.CAMERA_MOVEOUT, d);
 	        
 	        init = interaction.reproject2D3D(cam, buffer, e.getX(), e.getY());
 		}
@@ -82,6 +86,16 @@ public class RubikPane extends JPanel implements MouseListener, MouseMotionListe
 			//cube movement
 			
 		}
+	}
+	
+	public void mouseWheelMoved(MouseWheelEvent e) { 
+		int notches = e.getWheelRotation();
+		if(notches > 0) { 
+			zoomCamera(-1);
+		} else { 
+			zoomCamera(1);
+		}
+		System.out.println("event");
 	}
 	
 	@SuppressWarnings("static-access")
