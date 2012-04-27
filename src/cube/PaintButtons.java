@@ -33,8 +33,8 @@ public class PaintButtons extends JPanel implements ActionListener{
 	private BasicArrowButton col3D = new BasicArrowButton(BasicArrowButton.SOUTH);
 	private JButton hint = new JButton("Hint");
 	private JButton scramble = new JButton("Scramble");
-	private JButton solve1 = new JButton("Solve 1");
-	private JButton solve2 = new JButton("Solve 2");
+	private JButton solve1 = new JButton("Solve");
+	private JButton solve2 = new JButton("Solve A*");
 	private PaintInstruct instructions;
 	RubikPane rubPane;
 	private Stack<String> history = new Stack<String>();
