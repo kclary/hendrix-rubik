@@ -43,24 +43,6 @@ public class PaintButtons extends JPanel implements ActionListener{
 	CubeRecognizer cubeRecognizer;
 	BuildDatabase builder;
 	
-	
-	/*public void mouseClicked(MouseEvent e) {
-	        System.out.println("In the mouse checked");
-	        java.awt.Point pt = e.getPoint();
-	        System.out.println(pt.x);
-	        SimpleVector vec = Interaction.reproject2D3D(world.getCamera(), buffer, pt.x, pt.y);
-	        System.out.println(vec);
-	                               
-	        int[] res=Interact2D.pickPolygon(world.getVisibilityList(), vec);
-	        if(res != null) {
-	                if(res.length > 0) {
-	                        Object3D picked = world.getObject(res[0]);
-	                        System.out.println("The object's name is :  " + picked.getName());             
-	                }
-	        }
-	        prevX = e.getX();
-	}*/
-	
 	public PaintButtons(PaintInstruct instruct, RubikPane pane){
 		super();
 		
@@ -204,10 +186,10 @@ public class PaintButtons extends JPanel implements ActionListener{
 		JTextArea instruct = instructions.getInstructBox();	
 		String instruction = "Twist row " + new Integer(row).toString();
 		if(dir == 1) {
+			rotateLeft(instruct, instruction + " Left\n", row, dir);
+			currentState = changer.rowLeftNewState(currentState, row-1);
+			currentState.setAsUserGenerated();
 			if(!history.empty()) { 
-				rotateLeft(instruct, instruction + " Left\n", row, dir);
-				currentState = changer.rowLeftNewState(currentState, row-1);
-				currentState.setAsUserGenerated();
 				if(history.peek().equals(instruction + " Left")) {
 					history.pop();
 				}
