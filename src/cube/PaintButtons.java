@@ -148,7 +148,7 @@ public class PaintButtons extends JPanel implements ActionListener{
 		}else if(evt.getSource() == col3D){
 			rotateCol(3, -1);			
 		}else if(evt.getSource() == scramble){
-			scrambleBlock(20);
+			scrambleBlock(15);
 		}else if(evt.getSource() == solve1) { 
 			solve();
 			instructions.getInstructBox().setText("Solved!\n");
